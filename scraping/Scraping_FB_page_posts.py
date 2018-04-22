@@ -26,7 +26,7 @@ def some_action(post,t,fil):
 	"""
 	#print(post['created_time'])
 	#print(post['message'])
-	detail = graph.get_object(id=post['id'], fields="id,message,full_picture,shares,from,comments,likes.summary(true)")
+	detail = graph.get_object(id=post['id'], fields="id,type,status_type,message,full_picture,place,shares,from,message_tags,comments,likes.summary(true)")
 	upd={}
 	upd['post_id'] = detail['id']
 	if 'message' in detail : upd['post_text']= detail['message']
@@ -41,13 +41,21 @@ def some_action(post,t,fil):
 			if 'safe_image.php' in img_nm: img_nm= img_nm.split('%2F')[-1]
 			path2Save = os.path.join(img_dest,img_nm)				#merging with path and filename
 			if not os.path.exists(path2Save):
-				urllib.request.urlretrieve(detail['full_picture'], path2Save)	#request image and save
-			upd['local_dir']= "images/"+img_nm
+				try:
+					urllib.request.urlretrieve(detail['full_picture'], path2Save)	#request image and save
+					upd['local_dir']= "images/"+img_nm
+				except:
+					print("error in fetching picture url",detail['full_picture'])				
+					pass
+			#upd['local_dir']= "images/"+img_nm
 	if 'likes' in detail : upd['num_likes']= detail['likes']['summary']['total_count']
 	upd['post_time'] = post['created_time']
 	if 'comments' in detail : upd['comments'] = [com for com in detail['comments']['data']]
 	if 'story' in post : upd['story']=post['story']
-	#fil.update(upd)
+	if 'message_tags' in detail:  upd['tags']= detail['message_tags']
+	if 'place' in detail: upd['location']= detail['place']
+	if 'status_type' in detail: upd['status_type']=detail['status_type']
+	if 'type' in detail: upd['type']=detail['type']
 	fil[t]=upd
 	print('loaded post number',t)
 
