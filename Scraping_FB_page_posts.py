@@ -18,8 +18,6 @@ from time import time
 import json,os,re
 import urllib.request
 
-#post=posts['data'][6]
-#t=9
 def some_action(post,t,fil):
 	""" Here you might want to do something with each post. E.g. grab the
 	post's message (post['message']) or the post's picture (post['picture']).
@@ -51,23 +49,6 @@ def some_action(post,t,fil):
 	#fil.update(upd)
 	fil[t]=upd
 	print('loaded post number',t)
-
-'''
-data = posts['data']
-for dat in data:
-	detail = graph.get_object(id=posts['data'][1]['id'], fields="id,message,full_picture,shares,comments,likes.summary(true)")
-
-post_text=detail['message']
-share_count=detail['shares']['count']
-pic_link = detail['full_picture']
-post_id = detail['id']
-num_likes= detail['likes']['summary']['total_count']
-post_time=data[1]['created_time']
-comments=[]
-[comments.append(com) for com in detail['comments']['data']]
-'''
-#https://graph.facebook.com/POST_ID/likes?summary=true&access_token=XXXXXXXXXXXX
-#message,id,full_picture,shares,comments
 
 def write_file(posts,SKIP,t=1):
 	#SKIP=True 		#If True will skip the pages of t variable
